@@ -1,0 +1,32 @@
+AWSTemplateFormatVersion: 2010-09-09
+Resources:
+  Cluster:
+    Properties:
+      ClusterName: mycluster
+    Type: AWS::ECS::Cluster
+  ServiceABCDEF:
+    Properties:
+      Cluster:
+        Ref: Cluster
+      DesiredCount: 1
+      LaunchType: FARGATE
+      ServiceName: serviceABCDEF
+      TaskDefinition:
+        Ref: TaskDefinitionVersion1
+    Type: AWS::ECS::Service
+  TaskDefinitionABCDEF:
+    Properties:
+      ContainerDefinitions:
+      - Environment:
+        - Name: ENV
+          Value: STG
+        Image:
+          Fn::ImportValue: bb
+        Name: task
+      ExecutionRoleArn:
+        Fn::ImportValue: aa
+      Family: tasktest
+      NetworkMode: awsvpc
+      RequiresCompatibilities:
+      - FARGATE
+    Type: AWS::ECS::TaskDefinition
